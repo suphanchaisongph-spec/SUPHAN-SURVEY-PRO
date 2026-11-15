@@ -9,9 +9,9 @@
 <div><label>N1 (Northing)</label><input id="n1" type="number" step="any" placeholder="พิกัดเหนือจุดเริ่ม"></div><div><label>E1 (Easting)</label><input id="e1" type="number" step="any" placeholder="พิกัดตะวันออกจุดเริ่ม"></div>
 <div><label>ระยะทาง</label><input id="d" type="number" min="0" step="any" placeholder="ระยะ"></div>
 <div style="grid-column:1/-1"><label>Azimuth (องศา - ลิปดา - ฟิลิปดา)</label><div class="dms-grid">
-<div><label>องศา</label><input id="adeg" type="number" min="0" max="359" step="1" placeholder="45"></div>
-<div><label>ลิปดา</label><input id="amin" type="number" min="0" max="59" step="1" placeholder="40"></div>
-<div><label>ฟิลิปดา</label><input id="asec" type="number" min="0" max="59.999999" step="any" placeholder="40"></div>
+<div><label>องศา</label><input id="adeg" type="number" min="0" max="359" step="1" ></div>
+<div><label>ลิปดา</label><input id="amin" type="number" min="0" max="59" step="1" ></div>
+<div><label>ฟิลิปดา</label><input id="asec" type="number" min="0" max="59.999999" step="any" ></div>
 </div></div></div>
 <div class="actions"><button class="primary" onclick="forward()">คำนวณ N2 / E2</button><button class="secondary" onclick="clearF()">ล้าง</button></div><div id="rf" class="result"></div>
 <p class="hint">Azimuth วัดจากทิศเหนือ หมุนตามเข็มนาฬิกา ลิปดาและฟิลิปดาต้องมีค่าตั้งแต่ 0 ถึงน้อยกว่า 60</p></section>
