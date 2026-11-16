@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="th"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#10243a"><link rel="manifest" href="manifest.webmanifest">
+<title>SUPHAN SURVEY PRO</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f2f5f8;color:#172536;font-family:system-ui,sans-serif}
+header{background:#10243a;color:white;padding:18px}header h1{font-size:22px;margin:0 0 4px}header p{margin:0;color:#dbeafe;font-size:13px}
+main{max-width:760px;margin:auto;padding:13px}.tabs,.mode{display:flex;gap:7px;margin-bottom:12px}
+button{font:inherit;font-weight:700;border:0;border-radius:9px;padding:11px;cursor:pointer}
+.tabs button,.mode button{flex:1;background:#e3eaf1;color:#172536;font-size:13px}.tabs button.active,.mode button.active{background:#1769aa;color:white}
+.card{background:white;border:1px solid #d6e0e9;border-radius:13px;padding:14px;margin-bottom:12px;box-shadow:0 2px 7px #00000008}
+h2{font-size:18px;margin:0 0 12px}h3{font-size:14px;margin:14px 0 7px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.field label{display:block;font-size:13px;font-weight:650;margin-bottom:4px}
+input{width:100%;padding:11px 9px;border:1px solid #cbd5e1;border-radius:8px;font:inherit;font-size:16px}
+.actions{display:flex;gap:8px;margin-top:12px}.primary{background:#1769aa;color:white;flex:1}.secondary{background:#e8eef4;color:#24364a;flex:1}
+.result{margin-top:12px;background:#edf6ff;border:1px solid #c8e2f8;border-radius:9px;padding:12px;line-height:1.7;overflow-wrap:anywhere}
+.kv{display:grid;grid-template-columns:1fr auto;gap:5px 10px}.kv span:nth-child(even){font-weight:700;text-align:right}
+.hint{font-size:12px;color:#64748b;line-height:1.5;margin:9px 0 0}.error{color:#b42318;font-weight:700}
+.hidden{display:none!important}canvas{width:100%;height:300px;border:1px solid #d6e0e9;border-radius:9px;margin-top:12px;background:white}
+footer{text-align:center;color:#64748b;font-size:12px;padding:10px}
+@media(max-width:420px){.tabs button{font-size:11px;padding:10px 3px}.grid{gap:7px}}
+</style></head><body>
+<header><h1>SUPHAN SURVEY PRO</h1><p>เครื่องคำนวณงานสำรวจ • รองรับมือถือ</p></header>
+<main>
+<div class="tabs"><button class="active" data-tab="fwd">คำนวณ N2, E2</button><button data-tab="inv">Azimuth / ระยะ</button><button data-tab="ang">มุมราบ BS–FS</button></div>
+<section id="fwd" class="card"><h2>คำนวณพิกัดปลายทาง (Forward)</h2>
+<div class="grid">
+<div class="field"><label>N1 (Northing)</label><input id="fn" type="number" step="any"></div><div class="field"><label>E1 (Easting)</label><input id="fe" type="number" step="any"></div>
+<div class="field"><label>ระยะทาง</label><input id="fd" type="number" min="0" step="any"></div><div class="field"><label>Azimuth องศา</label><input id="dg" type="number" min="0" max="359" step="1"></div>
+<div class="field"><label>ลิปดา</label><input id="mn" type="number" min="0" max="59" step="1"></div><div class="field"><label>ฟิลิปดา</label><input id="sc" type="number" min="0" max="59.9999" step="any"></div>
+</div><div class="actions"><button class="primary" id="fc">คำนวณพิกัด N2, E2</button><button class="secondary" id="fx">ล้างค่า</button></div><div id="fo" class="result hidden"></div><p class="hint">Azimuth วัดจากทิศเหนือ หมุนตามเข็มนาฬิกา</p></section>
+<section id="inv" class="card hidden"><h2>คำนวณย้อนกลับ (Inverse)</h2><div class="grid">
+<div class="field"><label>N1</label><input id="in1" type="number" step="any"></div><div class="field"><label>E1</label><input id="ie1" type="number" step="any"></div>
+<div class="field"><label>N2</label><input id="in2" type="number" step="any"></div><div class="field"><label>E2</label><input id="ie2" type="number" step="any"></div>
+</div><div class="actions"><button class="primary" id="ic">คำนวณ Azimuth และระยะ</button><button class="secondary" id="ix">ล้างค่า</button></div><div id="io" class="result hidden"></div></section>
+<section id="ang" class="card hidden"><h2>คำนวณมุมราบจากพิกัด</h2>
+<div class="mode"><button id="m2" class="active">2 จุด: Station–Target</button><button id="m3">3 จุด: BS–Station–FS</button></div>
+<div id="two"><h3>STATION</h3><div class="grid"><div class="field"><label>Station N</label><input id="sn2" type="number" step="any"></div><div class="field"><label>Station E</label><input id="se2" type="number" step="any"></div></div>
+<h3>TARGET</h3><div class="grid"><div class="field"><label>Target N</label><input id="tn" type="number" step="any"></div><div class="field"><label>Target E</label><input id="te" type="number" step="any"></div></div></div>
+<div id="three" class="hidden"><h3>BS (Backsight)</h3><div class="grid"><div class="field"><label>BS N</label><input id="bn" type="number" step="any"></div><div class="field"><label>BS E</label><input id="be" type="number" step="any"></div></div>
+<h3>STATION (จุดตั้งกล้อง)</h3><div class="grid"><div class="field"><label>Station N</label><input id="sn3" type="number" step="any"></div><div class="field"><label>Station E</label><input id="se3" type="number" step="any"></div></div>
+<h3>FS (Foresight)</h3><div class="grid"><div class="field"><label>FS N</label><input id="xn" type="number" step="any"></div><div class="field"><label>FS E</label><input id="xe" type="number" step="any"></div></div></div>
+<div class="actions"><button class="primary" id="ac">คำนวณ</button><button class="secondary" id="ax">ล้างค่า</button></div><div id="ao" class="result hidden"></div>
+<canvas id="plot" width="700" height="420"></canvas><p class="hint">มุมตามเข็ม = (Azimuth FS − Azimuth BS + 360) mod 360 เป็นมุมเปลี่ยนทิศจากแนว BS ไป FS ไม่ใช่มุมภายในรูปแปลงโดยอัตโนมัติ</p></section>
+<footer>SUPHAN SURVEY PRO • คำนวณภายในอุปกรณ์</footer></main>
+<script>
+const $=id=>document.getElementById(id),v=id=>{let x=$(id).value.trim();return x===''?NaN:Number(x)},rad=x=>x*Math.PI/180,norm=x=>(x%360+360)%360;
+const az=(n1,e1,n2,e2)=>norm(Math.atan2(e2-e1,n2-n1)*180/Math.PI),dst=(n1,e1,n2,e2)=>Math.hypot(n2-n1,e2-e1);
+function dms(a){a=norm(a);let d=Math.floor(a),q=(a-d)*60,m=Math.floor(q),s=(q-m)*60;if(s>59.9999){s=0;m++}if(m>=60){m=0;d=(d+1)%360}return `${d}° ${m}' ${s.toFixed(2)}"`}function out(id,s){$(id).innerHTML=s;$(id).classList.remove('hidden')}function err(id,s){out(id,`<span class="error">${s}</span>`)}
+document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>{document.querySelectorAll('[data-tab]').forEach(x=>x.classList.toggle('active',x===b));['fwd','inv','ang'].forEach(x=>$(x).classList.toggle('hidden',x!==b.dataset.tab))});
+$('fc').onclick=()=>{let [n,e,d,g,m,s]=['fn','fe','fd','dg','mn','sc'].map(v);if(![n,e,d,g,m,s].every(Number.isFinite)||d<0||g<0||g>359||m<0||m>=60||s<0||s>=60)return err('fo','กรอกข้อมูลให้ครบ และตรวจสอบองศา/ลิปดา/ฟิลิปดา');let a=g+m/60+s/3600;out('fo',`<div class="kv"><span>Azimuth</span><span>${a.toFixed(6)}° (${dms(a)})</span><span>N2</span><span>${(n+d*Math.cos(rad(a))).toFixed(4)}</span><span>E2</span><span>${(e+d*Math.sin(rad(a))).toFixed(4)}</span></div>`)};
+$('fx').onclick=()=>{['fn','fe','fd','dg','mn','sc'].forEach(x=>$(x).value='');$('fo').classList.add('hidden')};
+$('ic').onclick=()=>{let [n1,e1,n2,e2]=['in1','ie1','in2','ie2'].map(v);if(![n1,e1,n2,e2].every(Number.isFinite))return err('io','กรุณากรอกพิกัดทั้ง 4 ช่อง');let a=az(n1,e1,n2,e2),d=dst(n1,e1,n2,e2);out('io',`<div class="kv"><span>ΔN</span><span>${(n2-n1).toFixed(4)}</span><span>ΔE</span><span>${(e2-e1).toFixed(4)}</span><span>Azimuth</span><span>${a.toFixed(6)}° (${dms(a)})</span><span>ระยะทาง</span><span>${d.toFixed(4)} m</span></div>`)};
+$('ix').onclick=()=>{['in1','ie1','in2','ie2'].forEach(x=>$(x).value='');$('io').classList.add('hidden')};
+let mode=2;function setMode(m){mode=m;$('m2').classList.toggle('active',m===2);$('m3').classList.toggle('active',m===3);$('two').classList.toggle('hidden',m!==2);$('three').classList.toggle('hidden',m!==3);$('ao').classList.add('hidden');emptyPlot()}$('m2').onclick=()=>setMode(2);$('m3').onclick=()=>setMode(3);
+$('ac').onclick=()=>{if(mode===2){let [n,e,t,u]=['sn2','se2','tn','te'].map(v);if(![n,e,t,u].every(Number.isFinite))return err('ao','กรุณากรอกพิกัด Station และ Target ให้ครบ');if(n===t&&e===u)return err('ao','Station และ Target ต้องไม่ซ้ำตำแหน่ง');let a=az(n,e,t,u),d=dst(n,e,t,u);out('ao',`<div class="kv"><span>Azimuth Station → Target</span><span>${a.toFixed(6)}° (${dms(a)})</span><span>ระยะทาง</span><span>${d.toFixed(4)} m</span></div><p class="hint">สองจุดให้ได้หนึ่งแนวเล็ง จึงยังหามุมระหว่าง BS กับ FS ไม่ได้</p>`);draw([{n,e,label:'STATION'},{n:t,e:u,label:'TARGET'}]);return}
+let [bn,be,n,e,x,y]=['bn','be','sn3','se3','xn','xe'].map(v);if(![bn,be,n,e,x,y].every(Number.isFinite))return err('ao','กรุณากรอกพิกัด BS, Station และ FS ให้ครบ');if((bn===n&&be===e)||(x===n&&y===e))return err('ao','BS, Station และ FS ต้องไม่ซ้ำตำแหน่ง');let ab=az(n,e,bn,be),af=az(n,e,x,y),cw=norm(af-ab),ccw=norm(ab-af),db=dst(n,e,bn,be),df=dst(n,e,x,y);out('ao',`<div class="kv"><span>Azimuth Station → BS</span><span>${ab.toFixed(6)}° (${dms(ab)})</span><span>Azimuth Station → FS</span><span>${af.toFixed(6)}° (${dms(af)})</span><span>มุมตามเข็ม BS → FS</span><span>${cw.toFixed(6)}° (${dms(cw)})</span><span>มุมทวนเข็ม FS → BS</span><span>${ccw.toFixed(6)}° (${dms(ccw)})</span><span>ระยะ Station → BS</span><span>${db.toFixed(4)} m</span><span>ระยะ Station → FS</span><span>${df.toFixed(4)} m</span></div>`);draw([{n:bn,e:be,label:'BS'},{n,e,label:'STATION'},{n:x,e:y,label:'FS'}],{ab,af,cw})};
+$('ax').onclick=()=>{['sn2','se2','tn','te','bn','be','sn3','se3','xn','xe'].forEach(x=>$(x).value='');$('ao').classList.add('hidden');emptyPlot()};
+function emptyPlot(){let c=$('plot'),x=c.getContext('2d');x.clearRect(0,0,c.width,c.height);x.fillStyle='#64748b';x.font='18px sans-serif';x.textAlign='center';x.fillText('กราฟจะแสดงหลังจากกดคำนวณ',350,210)}
+function draw(p,a){let c=$('plot'),x=c.getContext('2d'),W=c.width,H=c.height;x.clearRect(0,0,W,H);let n0=Math.min(...p.map(q=>q.n)),n1=Math.max(...p.map(q=>q.n)),e0=Math.min(...p.map(q=>q.e)),e1=Math.max(...p.map(q=>q.e)),span=Math.max(n1-n0,e1-e0,1),scale=Math.min(500/span,280/span),mn=(n0+n1)/2,me=(e0+e1)/2,xy=q=>({x:350+(q.e-me)*scale,y:210-(q.n-mn)*scale});x.strokeStyle='#e6edf3';for(let i=30;i<680;i+=40){x.beginPath();x.moveTo(i,20);x.lineTo(i,400);x.stroke()}for(let j=20;j<410;j+=40){x.beginPath();x.moveTo(20,j);x.lineTo(680,j);x.stroke()}x.fillStyle='#123e67';x.font='bold 18px sans-serif';x.textAlign='center';x.fillText('N ↑',650,24);if(p.length>1){x.strokeStyle='#1769aa';x.lineWidth=3;x.beginPath();p.forEach((q,i)=>{let z=xy(q);i?x.lineTo(z.x,z.y):x.moveTo(z.x,z.y)});x.stroke()}p.forEach((q,i)=>{let z=xy(q);x.fillStyle=['#d97706','#1769aa','#15966b'][i];x.beginPath();x.arc(z.x,z.y,7,0,7);x.fill();x.fillStyle='#172536';x.font='bold 15px sans-serif';x.textAlign='left';x.fillText(q.label,z.x+9,z.y-9)});if(a){let s=xy(p[1]),r=48,start=(a.ab-90)*Math.PI/180;x.strokeStyle='#d97706';x.lineWidth=3;x.beginPath();x.arc(s.x,s.y,r,start,start+a.cw*Math.PI/180);x.stroke()}}
+emptyPlot();
+if('serviceWorker'in navigator&&location.protocol.startsWith('http'))addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
+</script></body></html>
